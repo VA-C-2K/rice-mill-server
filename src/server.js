@@ -20,7 +20,7 @@ app.use(express.json());
 if (process.env.NODE_ENV === "prod") {
   app.use(
     cors({
-      origin: ["http://127.0.0.1:5173"],
+      origin: [process.env.PROD_CLIENT_URL],
       methods: ["GET", "POST", "PUT", "DELETE"],
       credentials: true,
     })
@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === "prod") {
 } else {
   app.use(
     cors({
-      origin: [process.env.PROD_CLIENT_URL],
+      origin: ["http://127.0.0.1:5173"],
       methods: ["GET", "POST", "PUT", "DELETE"],
       credentials: true,
     })
