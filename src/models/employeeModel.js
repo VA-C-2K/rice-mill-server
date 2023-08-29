@@ -4,7 +4,7 @@ const employeeSchema = mongoose.Schema(
   {
     first_name: { type: String, required: true },
     last_name: { type: String, required: true },
-    phone_number: { type: Number, required: true, unique: true },
+    phone_number: { type: String, required: true, unique: true },
     address: { type: String },
     salary: { type: Number, required: true },
     aadhar_card_no: { type: String, unique: true },

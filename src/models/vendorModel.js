@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const vendorSchema = mongoose.Schema(
   {
-    phone_number: { type: Number, required: true, unique: true },
+    phone_number: { type: String, required: true, unique: true },
     first_name: { type: String, required: true },
     last_name: { type: String, required: true },
     address: { type: String, required: true },

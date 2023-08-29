@@ -17,22 +17,29 @@ const fetchVendor = asyncHandler(async (req, res) => {
         return res.status(404).json({ message: "Vendor not found" });
       }
     }
-    let vendors = await Vendor.find({})
+    const filter = {};
+    if (!isEmpty(term)) {
+      filter.$or = [
+        { phone_number: { $regex: term, $options: 'i' } },
+        { first_name: { $regex: term, $options: 'i' } },
+        { last_name: { $regex: term, $options: 'i' } },
+      ];
+    }
+
+    const totalVendors = await Vendor.countDocuments(filter);
+
+    const vendors = await Vendor.find(filter)
       .sort({ _id: 1 })
       .skip((page - 1) * perPage)
       .limit(perPage)
       .populate("created_by", "name phonenumber")
       .populate("modified_by", "name phonenumber");
 
-    if (!isEmpty(term)) {
-      vendors = vendors.filter((vendor) => vendor.phone_number.includes(term) || vendor.first_name.includes(term) || vendor.last_name.includes(term));
-    }
-    const totalVendors = await Vendor.find({});
     return res.status(200).json({
       vendors,
-      totalCount: totalVendors.length,
+      totalCount: totalVendors,
       currentPage: page,
-      totalPages: Math.ceil(totalVendors.length / perPage),
+      totalPages: Math.ceil(totalVendors / perPage),
     });
   } catch (error) {
     res.status(400);

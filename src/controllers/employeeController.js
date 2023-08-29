@@ -14,28 +14,30 @@ const fetchEmployee = asyncHandler(async (req, res) => {
         return res.status(404).json({ message: "Employee not found" });
       }
     }
-    let employees = await Employee.find({})
+
+    const filter = {};
+    if (!isEmpty(term)) {
+      filter.$or = [
+        { phone_number: { $regex: term, $options: 'i' } },
+        { first_name: { $regex: term, $options: 'i' } },
+        { last_name: { $regex: term, $options: 'i' } },
+      ];
+    }
+
+    const totalEmployees = await Employee.countDocuments(filter);
+
+    const employees = await Employee.find(filter)
       .sort({ _id: 1 })
       .skip((page - 1) * perPage)
       .limit(perPage)
       .populate("created_by", "name phonenumber")
       .populate("modified_by", "name phonenumber");
 
-    if (!isEmpty(term)) {
-      employees = employees.filter(
-        (employee) =>
-          employee.phone_number.includes(term) ||
-          employee.first_name.includes(term) ||
-          employee.last_name.includes(term) ||
-          employee.aadhar_card_no.includes(term)
-      );
-    }
-    const totalEmployees = await Employee.find({});
     return res.status(200).json({
       employees,
-      totalCount: totalEmployees.length,
+      totalCount: totalEmployees,
       currentPage: page,
-      totalPages: Math.ceil(totalEmployees.length / perPage),
+      totalPages: Math.ceil(totalEmployees / perPage),
     });
   } catch (error) {
     res.status(400);
