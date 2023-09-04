@@ -3,8 +3,8 @@ const isEmpty = require("lodash/isEmpty");
 const Employee = require("../models/employeeModel");
 
 const fetchEmployee = asyncHandler(async (req, res) => {
-  const { emp_id, page, perPage = 5 } = req.query;
-  let { term } = req.query;
+  const { emp_id, page=1, perPage = 5 } = req.query;
+  let { term,role } = req.query;
   try {
     if (emp_id) {
       const employee = await Employee.findById(emp_id);
@@ -22,6 +22,11 @@ const fetchEmployee = asyncHandler(async (req, res) => {
         { first_name: { $regex: term, $options: 'i' } },
         { last_name: { $regex: term, $options: 'i' } },
       ];
+    }
+    else if(!isEmpty(role)){
+      filter.$or=[
+        { role: { $regex: role, $options: 'i' } }
+      ]
     }
 
     const totalEmployees = await Employee.countDocuments(filter);
@@ -124,3 +129,4 @@ const deleteEmployee = asyncHandler(async (req, res) => {
 });
 
 module.exports = { fetchEmployee, createEmployee, updateEmployee, deleteEmployee };
+

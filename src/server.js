@@ -6,6 +6,7 @@ const customerRoutes = require("./routes/customerRoutes");
 const vendorRoutes = require("./routes/vendorRoutes");
 const productRoutes = require("./routes/productRoutes");
 const employeeRoutes = require("./routes/employeeRoutes");
+const vehicleRoutes = require("./routes/vehicleRoutes");
 const cors = require("cors");
 // const path = require("path");
 const connectDB = require("./config/db");
@@ -40,6 +41,7 @@ app.use("/customer", customerRoutes);
 app.use("/vendor", vendorRoutes);
 app.use("/product", productRoutes);
 app.use("/employee", employeeRoutes);
+app.use("/vehicle", vehicleRoutes);
 
 
 
