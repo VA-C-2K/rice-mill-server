@@ -1,8 +1,8 @@
-const asyncHandler = require("express-async-handler");
-const generateToken = require("../config/generateToken");
-const User = require("../models/userModel");
+import asyncHandler from "express-async-handler";
+import generateToken from "../config/generateToken.js";
+import User from "../models/userModel.js";
 
-const registerUser = asyncHandler(async (req, res) => {
+export const registerUser = asyncHandler(async (req, res) => {
   const { name, phonenumber, password } = req.body;
   if (!name || !password || !phonenumber) {
     res.status(400);
@@ -34,7 +34,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-const authUser = asyncHandler(async (req, res) => {
+export const authUser = asyncHandler(async (req, res) => {
   const { phonenumber, password } = req.body;
   let user;
   if (!isNaN(phonenumber)) {
@@ -58,5 +58,3 @@ const authUser = asyncHandler(async (req, res) => {
     throw new Error("User Not Found");
   }
 });
-
-module.exports = { registerUser, authUser };

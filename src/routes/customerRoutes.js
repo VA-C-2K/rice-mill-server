@@ -1,6 +1,6 @@
-const express = require("express");
-const { fetchCustomer, createCustomer, updateCustomer, deleteCustomer } = require("../controllers/customerController");
-const { protect } = require("../middleware/authMiddleware");
+import express from "express";
+import { fetchCustomer, createCustomer, updateCustomer, deleteCustomer } from "../controllers/customerController.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -9,4 +9,4 @@ router.route("/create").post(protect, createCustomer);
 router.route("/update").put(protect, updateCustomer);
 router.route("/delete").delete(protect, deleteCustomer);
 
-module.exports = router;
+export default router;

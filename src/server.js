@@ -1,17 +1,16 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const { notFound, errorHandler } = require("./middleware/errorMiddleware");
-const userRoutes = require("./routes/userRoutes");
-const customerRoutes = require("./routes/customerRoutes");
-const vendorRoutes = require("./routes/vendorRoutes");
-const productRoutes = require("./routes/productRoutes");
-const employeeRoutes = require("./routes/employeeRoutes");
-const vehicleRoutes = require("./routes/vehicleRoutes");
-const cors = require("cors");
-// const path = require("path");
-const connectDB = require("./config/db");
+import express from "express";
+import dotenv from "dotenv";
+import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import userRoutes from "./routes/userRoutes.js";
+import customerRoutes from "./routes/customerRoutes.js";
+import vendorRoutes from "./routes/vendorRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import employeeRoutes from "./routes/employeeRoutes.js";
+import vehicleRoutes from "./routes/vehicleRoutes.js";
+import cors from "cors";
+import connectDB from "./config/db.js";
 // eslint-disable-next-line unused-imports/no-unused-vars
-const colors = require("colors");
+import colors from "colors";
 
 dotenv.config();
 connectDB();

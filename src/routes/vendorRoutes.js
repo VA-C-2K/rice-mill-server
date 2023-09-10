@@ -1,6 +1,6 @@
-const express = require("express");
-const { fetchVendor, createVendor, updateVendor, deleteVendor } = require("../controllers/vendorController");
-const { protect } = require("../middleware/authMiddleware");
+import express from "express";
+import { fetchVendor, createVendor, updateVendor, deleteVendor } from "../controllers/vendorController.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -9,4 +9,4 @@ router.route("/create").post(protect, createVendor);
 router.route("/update").put(protect, updateVendor);
 router.route("/delete").delete(protect, deleteVendor);
 
-module.exports = router;
+export default router;

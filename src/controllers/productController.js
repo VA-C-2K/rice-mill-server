@@ -1,7 +1,7 @@
-const asyncHandler = require("express-async-handler");
-const Product = require("../models/productModel");
+import asyncHandler from "express-async-handler";
+import Product from "../models/productModel.js";
 
-const fetchProduct = asyncHandler(async (req, res) => {
+export const fetchProduct = asyncHandler(async (req, res) => {
   const { prod_id } = req.query;
   try {
     if (prod_id) {
@@ -23,7 +23,7 @@ const fetchProduct = asyncHandler(async (req, res) => {
   }
 });
 
-const createProduct = asyncHandler(async (req, res) => {
+export const createProduct = asyncHandler(async (req, res) => {
   const { name, quantity, current_rate } = req.body;
   const user = req.user._id;
 
@@ -50,7 +50,7 @@ const createProduct = asyncHandler(async (req, res) => {
   }
 });
 
-const updateProduct = asyncHandler(async (req, res) => {
+export const updateProduct = asyncHandler(async (req, res) => {
   const { prod_id, ...updateDetails } = req.body;
   const user = req.user._id;
 
@@ -71,7 +71,7 @@ const updateProduct = asyncHandler(async (req, res) => {
   }
 });
 
-const deleteProduct = asyncHandler(async (req, res) => {
+export const deleteProduct = asyncHandler(async (req, res) => {
   const { prod_id } = req.query;
   try {
     const productExists = await Product.findById(prod_id);
@@ -89,4 +89,3 @@ const deleteProduct = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { fetchProduct, createProduct, updateProduct, deleteProduct };

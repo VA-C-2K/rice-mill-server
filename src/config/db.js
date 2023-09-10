@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
@@ -13,5 +13,4 @@ const connectDB = async () => {
     process.exit();
   }
 };
-
-module.exports = connectDB;
+export default connectDB;

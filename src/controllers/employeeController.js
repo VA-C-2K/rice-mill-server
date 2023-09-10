@@ -1,8 +1,8 @@
-const asyncHandler = require("express-async-handler");
-const isEmpty = require("lodash/isEmpty");
-const Employee = require("../models/employeeModel");
+import asyncHandler from "express-async-handler";
+import isEmpty from "lodash/isEmpty.js";
+import Employee from "../models/employeeModel.js";
 
-const fetchEmployee = asyncHandler(async (req, res) => {
+export const fetchEmployee = asyncHandler(async (req, res) => {
   const { emp_id, page=1, perPage = 5 } = req.query;
   let { term,role } = req.query;
   try {
@@ -50,7 +50,7 @@ const fetchEmployee = asyncHandler(async (req, res) => {
   }
 });
 
-const createEmployee = asyncHandler(async (req, res) => {
+export const createEmployee = asyncHandler(async (req, res) => {
   const { phone_number, first_name, last_name, address, salary, aadhar_card_no, no_of_leaves, role, over_time_hrs } = req.body;
   const user = req.user._id;
 
@@ -89,7 +89,7 @@ const createEmployee = asyncHandler(async (req, res) => {
   }
 });
 
-const updateEmployee = asyncHandler(async (req, res) => {
+export const updateEmployee = asyncHandler(async (req, res) => {
   const { emp_id, ...updateDetails } = req.body;
   const user = req.user._id;
 
@@ -110,7 +110,7 @@ const updateEmployee = asyncHandler(async (req, res) => {
   }
 });
 
-const deleteEmployee = asyncHandler(async (req, res) => {
+export const deleteEmployee = asyncHandler(async (req, res) => {
   const { emp_id } = req.query;
   try {
     const employeeExists = await Employee.findById(emp_id);
@@ -128,5 +128,4 @@ const deleteEmployee = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { fetchEmployee, createEmployee, updateEmployee, deleteEmployee };
 

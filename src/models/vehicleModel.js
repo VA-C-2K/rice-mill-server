@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import  mongoose from "mongoose";
 
 const vehicleSchema = mongoose.Schema(
   {
@@ -14,4 +14,4 @@ const vehicleSchema = mongoose.Schema(
 
 const Vehicle = mongoose.model("Vehicle", vehicleSchema);
 
-module.exports = Vehicle;
+export default Vehicle;

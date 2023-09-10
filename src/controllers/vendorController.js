@@ -1,8 +1,8 @@
-const asyncHandler = require("express-async-handler");
-const isEmpty = require("lodash/isEmpty");
-const Vendor = require("../models/vendorModel");
+import asyncHandler from "express-async-handler";
+import isEmpty from "lodash/isEmpty.js";
+import Vendor from "../models/vendorModel.js";
 
-const fetchVendor = asyncHandler(async (req, res) => {
+export const fetchVendor = asyncHandler(async (req, res) => {
   const { vendor_id, page, perPage = 5 } = req.query;
   let { term } = req.query;
   if (term == " ") {
@@ -47,7 +47,7 @@ const fetchVendor = asyncHandler(async (req, res) => {
   }
 });
 
-const createVendor = asyncHandler(async (req, res) => {
+export const createVendor = asyncHandler(async (req, res) => {
   const { phone_number, first_name, last_name, address, gov_or_vendor } = req.body;
   const user = req.user._id;
 
@@ -74,7 +74,7 @@ const createVendor = asyncHandler(async (req, res) => {
   }
 });
 
-const updateVendor = asyncHandler(async (req, res) => {
+export const updateVendor = asyncHandler(async (req, res) => {
   const { vendor_id, ...updateDetails } = req.body;
   const user = req.user._id;
 
@@ -95,7 +95,7 @@ const updateVendor = asyncHandler(async (req, res) => {
   }
 });
 
-const deleteVendor = asyncHandler(async (req, res) => {
+export const deleteVendor = asyncHandler(async (req, res) => {
   const { vendor_id } = req.query;
   try {
     const vendorExists = await Vendor.findById(vendor_id);
@@ -112,5 +112,3 @@ const deleteVendor = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: error.message });
   }
 });
-
-module.exports = { fetchVendor, createVendor, updateVendor, deleteVendor };

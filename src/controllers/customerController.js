@@ -1,8 +1,8 @@
-const asyncHandler = require("express-async-handler");
-const isEmpty = require("lodash/isEmpty");
-const Customer = require("../models/customerModel");
+import asyncHandler from "express-async-handler";
+import isEmpty from "lodash/isEmpty.js";
+import Customer from "../models/customerModel.js";
 
-const fetchCustomer = asyncHandler(async (req, res) => {
+export const fetchCustomer = asyncHandler(async (req, res) => {
   const { cust_id, page, perPage = 5 } = req.query;
   let { term } = req.query;
   if (term == " ") {
@@ -47,7 +47,7 @@ const fetchCustomer = asyncHandler(async (req, res) => {
   }
 });
 
-const createCustomer = asyncHandler(async (req, res) => {
+export const createCustomer = asyncHandler(async (req, res) => {
   const { phone_number, first_name, last_name, address, gov_or_cust } = req.body;
   const user = req.user._id;
 
@@ -74,7 +74,7 @@ const createCustomer = asyncHandler(async (req, res) => {
   }
 });
 
-const updateCustomer = asyncHandler(async (req, res) => {
+export const updateCustomer = asyncHandler(async (req, res) => {
   const { cust_id, ...updateDetails } = req.body;
   const user = req.user._id;
 
@@ -95,7 +95,7 @@ const updateCustomer = asyncHandler(async (req, res) => {
   }
 });
 
-const deleteCustomer = asyncHandler(async (req, res) => {
+export const deleteCustomer = asyncHandler(async (req, res) => {
   const { cust_id } = req.query;
   try {
     const customerExists = await Customer.findById(cust_id);
@@ -113,4 +113,3 @@ const deleteCustomer = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { fetchCustomer, createCustomer, updateCustomer, deleteCustomer };
