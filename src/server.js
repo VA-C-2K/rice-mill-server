@@ -42,8 +42,6 @@ app.use("/product", productRoutes);
 app.use("/employee", employeeRoutes);
 app.use("/vehicle", vehicleRoutes);
 
-
-
 app.get("/", (req, res) => {
   res.send("API is running");
 });

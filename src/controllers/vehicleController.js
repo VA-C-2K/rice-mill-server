@@ -19,9 +19,7 @@ export const fetchVehicle = asyncHandler(async (req, res) => {
     }
     const filter = {};
     if (!isEmpty(term)) {
-      filter.$or = [
-        { vehicle_number: { $regex: term, $options: 'i' } }
-      ];
+      filter.$or = [{ vehicle_number: { $regex: term, $options: "i" } }];
     }
 
     const totalVehicles = await Vehicle.countDocuments(filter);
@@ -80,7 +78,10 @@ export const updateVehicle = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Vehicle not found" });
     }
 
-    const updatedVehicle = await Vehicle.updateOne({ _id: vehicle_id }, { $set: { employee_details: employee_id, ...updateDetails, created_by: user, modified_by: user } });
+    const updatedVehicle = await Vehicle.updateOne(
+      { _id: vehicle_id },
+      { $set: { employee_details: employee_id, ...updateDetails, created_by: user, modified_by: user } }
+    );
     if (updatedVehicle.modifiedCount) {
       return res.status(200).json({ message: "Vehicle updated successfully" });
     } else {

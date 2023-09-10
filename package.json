@@ -1,7 +1,7 @@
 {
   "name": "rice-mill",
   "version": "1.0.0",
-   "type": "module",
+  "type": "module",
   "scripts": {
     "start": "nodemon src/server.js",
     "clean": "rimraf dist",

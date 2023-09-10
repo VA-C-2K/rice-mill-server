@@ -21,9 +21,9 @@ export const fetchCustomer = asyncHandler(async (req, res) => {
     const filter = {};
     if (!isEmpty(term)) {
       filter.$or = [
-        { phone_number: { $regex: term, $options: 'i' } },
-        { first_name: { $regex: term, $options: 'i' } },
-        { last_name: { $regex: term, $options: 'i' } },
+        { phone_number: { $regex: term, $options: "i" } },
+        { first_name: { $regex: term, $options: "i" } },
+        { last_name: { $regex: term, $options: "i" } },
       ];
     }
 
@@ -112,4 +112,3 @@ export const deleteCustomer = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: error.message });
   }
 });
-

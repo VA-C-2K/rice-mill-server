@@ -20,9 +20,9 @@ export const fetchVendor = asyncHandler(async (req, res) => {
     const filter = {};
     if (!isEmpty(term)) {
       filter.$or = [
-        { phone_number: { $regex: term, $options: 'i' } },
-        { first_name: { $regex: term, $options: 'i' } },
-        { last_name: { $regex: term, $options: 'i' } },
+        { phone_number: { $regex: term, $options: "i" } },
+        { first_name: { $regex: term, $options: "i" } },
+        { last_name: { $regex: term, $options: "i" } },
       ];
     }
 

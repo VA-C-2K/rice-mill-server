@@ -3,8 +3,8 @@ import isEmpty from "lodash/isEmpty.js";
 import Employee from "../models/employeeModel.js";
 
 export const fetchEmployee = asyncHandler(async (req, res) => {
-  const { emp_id, page=1, perPage = 5 } = req.query;
-  let { term,role } = req.query;
+  const { emp_id, page = 1, perPage = 5 } = req.query;
+  let { term, role } = req.query;
   try {
     if (emp_id) {
       const employee = await Employee.findById(emp_id);
@@ -18,15 +18,12 @@ export const fetchEmployee = asyncHandler(async (req, res) => {
     const filter = {};
     if (!isEmpty(term)) {
       filter.$or = [
-        { phone_number: { $regex: term, $options: 'i' } },
-        { first_name: { $regex: term, $options: 'i' } },
-        { last_name: { $regex: term, $options: 'i' } },
+        { phone_number: { $regex: term, $options: "i" } },
+        { first_name: { $regex: term, $options: "i" } },
+        { last_name: { $regex: term, $options: "i" } },
       ];
-    }
-    else if(!isEmpty(role)){
-      filter.$or=[
-        { role: { $regex: role, $options: 'i' } }
-      ]
+    } else if (!isEmpty(role)) {
+      filter.$or = [{ role: { $regex: role, $options: "i" } }];
     }
 
     const totalEmployees = await Employee.countDocuments(filter);
@@ -127,5 +124,3 @@ export const deleteEmployee = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: error.message });
   }
 });
-
-
