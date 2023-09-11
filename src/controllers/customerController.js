@@ -3,7 +3,7 @@ import isEmpty from "lodash/isEmpty.js";
 import Customer from "../models/customerModel.js";
 
 export const fetchCustomer = asyncHandler(async (req, res) => {
-  const { term,cust_id, page, perPage = 5 } = req.query;
+  const { term, cust_id, page, perPage = 5 } = req.query;
   try {
     if (cust_id) {
       const customer = await Customer.findById(cust_id);

@@ -23,7 +23,7 @@ export const fetchEmployee = asyncHandler(async (req, res) => {
       ];
     } else if (!isEmpty(role)) {
       return res.status(200).json({
-        employees : await Employee.find({ role: { $regex: role, $options: "i" } })
+        employees: await Employee.find({ role: { $regex: role, $options: "i" } }),
       });
     }
 
@@ -34,8 +34,8 @@ export const fetchEmployee = asyncHandler(async (req, res) => {
       .limit(perPage)
       .populate("created_by", "name phonenumber")
       .populate("modified_by", "name phonenumber");
-    
-      employees
+
+    employees;
 
     return res.status(200).json({
       employees,

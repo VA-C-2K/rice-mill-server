@@ -3,7 +3,7 @@ import isEmpty from "lodash/isEmpty.js";
 import Vehicle from "../models/vehicleModel.js";
 
 export const fetchVehicle = asyncHandler(async (req, res) => {
-  const { term, vehicle_id, page, perPage = 5,list } = req.query;
+  const { term, vehicle_id, page, perPage = 5, list } = req.query;
   try {
     if (vehicle_id) {
       const vehicle = await Vehicle.findById(vehicle_id);
@@ -16,10 +16,9 @@ export const fetchVehicle = asyncHandler(async (req, res) => {
     const filter = {};
     if (!isEmpty(term)) {
       filter.$or = [{ vehicle_number: { $regex: term, $options: "i" } }];
-    }
-    else if(!isEmpty(list) && list){
+    } else if (!isEmpty(list) && list) {
       return res.status(200).json({
-        vehicles : await Vehicle.find({}).populate("employee_details", "first_name last_name phone_number role")
+        vehicles: await Vehicle.find({}).populate("employee_details", "first_name last_name phone_number role"),
       });
     }
 
