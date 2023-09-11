@@ -3,11 +3,7 @@ import isEmpty from "lodash/isEmpty.js";
 import Vendor from "../models/vendorModel.js";
 
 export const fetchVendor = asyncHandler(async (req, res) => {
-  const { vendor_id, page, perPage = 5 } = req.query;
-  let { term } = req.query;
-  if (term == " ") {
-    term = "";
-  }
+  const { term, vendor_id, page, perPage = 5,list } = req.query;
   try {
     if (vendor_id) {
       const vendor = await Vendor.findById(vendor_id);
@@ -24,6 +20,11 @@ export const fetchVendor = asyncHandler(async (req, res) => {
         { first_name: { $regex: term, $options: "i" } },
         { last_name: { $regex: term, $options: "i" } },
       ];
+    }
+    else if(!isEmpty(list) && list){
+      return res.status(200).json({
+        vendors : await Vendor.find({})
+      });
     }
 
     const totalVendors = await Vendor.countDocuments(filter);
