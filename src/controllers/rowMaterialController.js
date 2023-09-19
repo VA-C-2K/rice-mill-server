@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 import RowMaterial from "../models/rawMaterialModel.js";
 
 export const fetchRowMaterial = asyncHandler(async (req, res) => {
-  const { row_id, page = 1, perPage = 5 } = req.query;
+  const { row_id, page = 1, perPage = 5,sort: { remaining_price_paid_on = -1, date = -1 } } = req.query;
   try {
     if (row_id) {
       const row_material = await RowMaterial.findById(row_id);
@@ -16,7 +16,7 @@ export const fetchRowMaterial = asyncHandler(async (req, res) => {
     const totalRowMaterial = await RowMaterial.countDocuments({});
 
     const row_materials = await RowMaterial.find({})
-      .sort({ remaining_price_paid_on: 1, date: 1 })
+      .sort({ remaining_price_paid_on, date })
       .skip((page - 1) * perPage)
       .limit(perPage)
       .populate("vehicle_details", "vehicle_number")

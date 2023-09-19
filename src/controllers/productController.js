@@ -9,7 +9,7 @@ export const fetchProduct = asyncHandler(async (req, res) => {
       if (product) {
         return res.status(200).json(product);
       } else {
-        return res.status(404).json({ message: "Vendor not found" });
+        return res.status(404).json({ message: "Product not found" });
       }
     }
     const products = await Product.find({}).sort({ _id: 1 }).populate("created_by", "name phonenumber").populate("modified_by", "name phonenumber");
