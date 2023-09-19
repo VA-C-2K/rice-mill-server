@@ -16,10 +16,7 @@ export const fetchDailyExpense = asyncHandler(async (req, res) => {
 
     const filter = {};
     if (!isEmpty(term)) {
-      filter.$or = [
-        { entity: { $regex: term, $options: "i" } },
-        { description: { $regex: term, $options: "i" } },
-      ];
+      filter.$or = [{ entity: { $regex: term, $options: "i" } }, { description: { $regex: term, $options: "i" } }];
     }
 
     const dailyExpenses = await DailyExpense.find(filter)
