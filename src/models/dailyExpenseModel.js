@@ -8,8 +8,6 @@ const dailyExpenseSchema = mongoose.Schema(
     entity: { type: String, required: true },
     created_by: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     modified_by: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    vehicle_details: { type: mongoose.Schema.Types.ObjectId, ref: "Vehicle" },
-    employee_details: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
   },
   {
     timestamps: true,
