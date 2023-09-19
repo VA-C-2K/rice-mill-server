@@ -2,7 +2,12 @@ import asyncHandler from "express-async-handler";
 import RowMaterial from "../models/rawMaterialModel.js";
 
 export const fetchRowMaterial = asyncHandler(async (req, res) => {
-  const { row_id, page = 1, perPage = 5,sort: { remaining_price_paid_on = -1, date = -1 } } = req.query;
+  const {
+    row_id,
+    page = 1,
+    perPage = 5,
+    sort: { remaining_price_paid_on = -1, date = -1 },
+  } = req.query;
   try {
     if (row_id) {
       const row_material = await RowMaterial.findById(row_id);
