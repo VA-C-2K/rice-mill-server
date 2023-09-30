@@ -10,6 +10,7 @@ import vehicleRoutes from "./routes/vehicleRoutes.js";
 import rowMaterialRoutes from "./routes/rowMaterialRoutes.js";
 import dailyExpenseRoutes from "./routes/dailyExpenseRoutes.js";
 import salesRoutes from "./routes/salesRoutes.js";
+import profitsRoutes from "./routes/profitsRoutes.js";
 import cors from "cors";
 import connectDB from "./config/db.js";
 // eslint-disable-next-line unused-imports/no-unused-vars
@@ -47,6 +48,7 @@ app.use("/vehicle", vehicleRoutes);
 app.use("/row-material", rowMaterialRoutes);
 app.use("/daily-expenses", dailyExpenseRoutes);
 app.use("/sales", salesRoutes);
+app.use("/profits", profitsRoutes);
 
 app.get("/", (req, res) => {
   res.send("API is running");
