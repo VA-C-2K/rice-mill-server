@@ -2,13 +2,7 @@ import asyncHandler from "express-async-handler";
 import Sales from "../models/salesModel.js";
 
 export const fetchSales = asyncHandler(async (req, res) => {
-  const {
-    sale_id,
-    page,
-    perPage = 5,
-    next_due_on = -1,
-    date = -1 ,
-  } = req.query;
+  const { sale_id, page, perPage = 5, next_due_on = -1, date = -1 } = req.query;
   try {
     if (sale_id) {
       const sale = await Sales.findById(sale_id);
