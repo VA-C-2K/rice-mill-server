@@ -6,9 +6,7 @@ import Employee from "../models/employeeModel.js";
 
 export const fetchProfit = asyncHandler(async (req, res) => {
   try {
-    const {
-      dateRange: { to, from },
-    } = req.query;
+    const { to, from } = req.query;
 
     const dateFilter = {};
     if (to && from) {

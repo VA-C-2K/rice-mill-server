@@ -3,7 +3,7 @@ import isEmpty from "lodash/isEmpty.js";
 import Customer from "../models/customerModel.js";
 
 export const fetchCustomer = asyncHandler(async (req, res) => {
-  const { term, cust_id, page, perPage = 5 } = req.query;
+  const { term, cust_id, page, perPage = 5, list } = req.query;
   try {
     if (cust_id) {
       const customer = await Customer.findById(cust_id);
@@ -21,6 +21,10 @@ export const fetchCustomer = asyncHandler(async (req, res) => {
         { first_name: { $regex: term, $options: "i" } },
         { last_name: { $regex: term, $options: "i" } },
       ];
+    } else if (!isEmpty(list) && list) {
+      return res.status(200).json({
+        customers: await Customer.find({}),
+      });
     }
 
     const customers = await Customer.find(filter)

@@ -1,12 +1,12 @@
 import express from "express";
-import { fetchDailyExpense, createDailyExpense, updateDailyExpense, deleteDailyExpense } from "../controllers/dailyExpenseController.js";
+import { fetchSales, createSales, updateSales, deleteSales } from "../controllers/salesContoller.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.route("/").get(protect, fetchDailyExpense);
-router.route("/create").post(protect, createDailyExpense);
-router.route("/update").put(protect, updateDailyExpense);
-router.route("/delete").delete(protect, deleteDailyExpense);
+router.route("/").get(protect, fetchSales);
+router.route("/create").post(protect, createSales);
+router.route("/update").put(protect, updateSales);
+router.route("/delete").delete(protect, deleteSales);
 
 export default router;

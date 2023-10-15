@@ -6,7 +6,8 @@ export const fetchSales = asyncHandler(async (req, res) => {
     sale_id,
     page,
     perPage = 5,
-    sort: { next_due_on = -1, date = -1 },
+    next_due_on = -1,
+    date = -1 ,
   } = req.query;
   try {
     if (sale_id) {
@@ -30,7 +31,7 @@ export const fetchSales = asyncHandler(async (req, res) => {
 
     const totalSales = await Sales.countDocuments({});
     return res.status(200).json({
-      dailyExpenses: sales,
+      sales,
       totalCount: totalSales,
       currentPage: page,
       totalPages: Math.ceil(totalSales / perPage),
