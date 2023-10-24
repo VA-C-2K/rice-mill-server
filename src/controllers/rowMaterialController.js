@@ -6,7 +6,8 @@ export const fetchRowMaterial = asyncHandler(async (req, res) => {
     row_id,
     page = 1,
     perPage = 5,
-    sort: { remaining_price_paid_on = -1, date = -1 },
+    remaining_price_paid_on = -1,
+    date = -1,
   } = req.query;
   try {
     if (row_id) {
