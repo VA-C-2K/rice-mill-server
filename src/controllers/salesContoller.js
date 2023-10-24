@@ -38,31 +38,21 @@ export const fetchSales = asyncHandler(async (req, res) => {
 });
 
 export const createSales = asyncHandler(async (req, res) => {
-  const {
-    date,
-    total_amount,
-    discount,
-    final_amount_paid,
-    next_due_on,
-    quantity,
-    vehicle_number,
-    vehicle_details,
-    product_details,
-    customer_details,
-  } = req.body;
+  const { date, total_amount, discount, final_amount_paid, next_due_on, quantity, vehicle_number, vehicle_details, product_details, customer_details } =
+    req.body;
   const user = req.user._id;
 
   if (!date || !total_amount || !quantity || !final_amount_paid || !final_amount_paid || !product_details || !customer_details) {
     return res.status(400).json({ message: "Please enter all fields" });
   }
-  const remainigAmount =  discount ? total_amount - discount - final_amount_paid : 0;
+  const remainigAmount = discount ? total_amount - discount - final_amount_paid : 0;
   try {
     const newSale = new Sales({
       date,
       total_amount,
       discount,
       final_amount_paid,
-      remainig_amount : remainigAmount,
+      remainig_amount: remainigAmount,
       next_due_on,
       quantity,
       vehicle_number,
@@ -74,10 +64,9 @@ export const createSales = asyncHandler(async (req, res) => {
     });
     const savedSale = await newSale.save();
     if (savedSale) {
-      return Product.updateOne({_id:product_details},{ $inc: { quantity: -quantity } })
-      .then(() => {
+      return Product.updateOne({ _id: product_details }, { $inc: { quantity: -quantity } }).then(() => {
         return res.status(201).json({ message: "Sales created successfully" });
-      })
+      });
     }
   } catch (error) {
     return res.status(400).json({ message: error.message });
@@ -93,13 +82,15 @@ export const updateSales = asyncHandler(async (req, res) => {
     if (!salesExists) {
       return res.status(404).json({ message: "Sales not found" });
     }
-    const remainigAmount =  updateDetails.discount ? updateDetails.total_amount - updateDetails.discount - updateDetails.final_amount_paid : 0;
-    const updatedSale = await Sales.updateOne({ _id: sale_id }, { $set: { ...updateDetails, remainig_amount:remainigAmount, created_by: user, modified_by: user } });
+    const remainigAmount = updateDetails.discount ? updateDetails.total_amount - updateDetails.discount - updateDetails.final_amount_paid : 0;
+    const updatedSale = await Sales.updateOne(
+      { _id: sale_id },
+      { $set: { ...updateDetails, remainig_amount: remainigAmount, created_by: user, modified_by: user } }
+    );
     if (updatedSale.modifiedCount) {
-      return Product.updateOne({_id:updateDetails.product_details},{ $inc: { quantity: -updateDetails.quantity } })
-      .then(()=>{
+      return Product.updateOne({ _id: updateDetails.product_details }, { $inc: { quantity: -updateDetails.quantity } }).then(() => {
         return res.status(200).json({ message: "Sales updated successfully" });
-      })
+      });
     } else {
       return res.status(200).json({ message: "No changes were made" });
     }
@@ -117,9 +108,9 @@ export const deleteSales = asyncHandler(async (req, res) => {
     }
     const deletedSale = await Sales.deleteOne({ _id: sale_id });
     if (deletedSale.deletedCount > 0) {
-      return Product.updateOne({_id:saleExists.product_details},{ $inc: { quantity: +saleExists.quantity } }).then(()=>{
+      return Product.updateOne({ _id: saleExists.product_details }, { $inc: { quantity: +saleExists.quantity } }).then(() => {
         return res.status(200).json({ message: "Sales deleted successfully" });
-      })
+      });
     } else {
       return res.status(200).json({ message: "No Sales was deleted" });
     }
