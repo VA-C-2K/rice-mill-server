@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import Sales from "../models/salesModel.js";
 import Product from "../models/productModel.js";
+import isEmpty from "lodash/isEmpty.js";
 
 export const fetchSales = asyncHandler(async (req, res) => {
   const { sale_id, page, perPage = 5, next_due_on = -1, date = -1 } = req.query;
@@ -47,7 +48,7 @@ export const createSales = asyncHandler(async (req, res) => {
   }
   const remainigAmount = discount ? total_amount - discount - final_amount_paid : 0;
   try {
-    const newSale = new Sales({
+    const payload = {
       date,
       total_amount,
       discount,
@@ -55,13 +56,14 @@ export const createSales = asyncHandler(async (req, res) => {
       remainig_amount: remainigAmount,
       next_due_on,
       quantity,
-      vehicle_number,
-      vehicle_details,
       product_details,
       customer_details,
       created_by: user,
       modified_by: user,
-    });
+    }
+    if(!isEmpty(vehicle_details)) payload.vehicle_details = vehicle_details;
+    if(!isEmpty(vehicle_number)) payload.vehicle_number = vehicle_number;
+    const newSale = new Sales(payload);
     const savedSale = await newSale.save();
     if (savedSale) {
       return Product.updateOne({ _id: product_details }, { $inc: { quantity: -quantity } }).then(() => {
@@ -83,9 +85,14 @@ export const updateSales = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Sales not found" });
     }
     const remainigAmount = updateDetails.discount ? updateDetails.total_amount - updateDetails.discount - updateDetails.final_amount_paid : 0;
+    const payload = {
+      ...updateDetails, remainig_amount: remainigAmount, created_by: user, modified_by: user
+    }
+    if(!isEmpty(updateDetails?.vehicle_details)) payload.vehicle_details = updateDetails?.vehicle_details;
+    if(!isEmpty(updateDetails?.vehicle_number)) payload.vehicle_number = updateDetails?.vehicle_number;
     const updatedSale = await Sales.updateOne(
       { _id: sale_id },
-      { $set: { ...updateDetails, remainig_amount: remainigAmount, created_by: user, modified_by: user } }
+      { $set: payload }
     );
     if (updatedSale.modifiedCount) {
       return Product.updateOne({ _id: updateDetails.product_details }, { $inc: { quantity: -updateDetails.quantity } }).then(() => {
