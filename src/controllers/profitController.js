@@ -21,7 +21,7 @@ export const fetchProfit = asyncHandler(async (req, res) => {
         .populate("product_details", "name quantity current_rate")
         .populate("customer_details", "phone_number first_name last_name gov_or_cust")
         .populate("vehicle_details", "vehicle_number"),
-      RowProduct.find(dateFilter),
+      RowProduct.find(dateFilter).populate("vendor_details", "first_name last_name gov_or_vendor phone_number"),
       Employee.find({}),
       DailyExpenses.find(dateFilter),
     ]);
@@ -37,11 +37,18 @@ export const fetchProfit = asyncHandler(async (req, res) => {
       id: item._id,
       remaining_price: item.remaining_price,
       remaining_price_paid_on: item.remaining_price_paid_on,
+      vendor_details:item.vendor_details
     }));
+
+    const filteredSales = sales.filter((item) => {
+      if(item.remainig_amount > 0 && item.next_due_on != null){
+        return item
+      }
+    })
 
     return res.status(200).json({
       profit,
-      sales,
+      sales:filteredSales,
       mrm_remaining_to_pay_amount: rowProductMRMRemainingToPayAmt,
     });
   } catch (error) {
