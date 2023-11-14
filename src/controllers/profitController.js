@@ -34,7 +34,7 @@ export const fetchProfit = asyncHandler(async (req, res) => {
     const profit = saleAmount - currentExpenses - employeeSalaries - rowProductPurchase;
 
     const rowProductMRMRemainingToPayAmt = rowProduct.map((item) => ({
-      id:item._id,
+      id: item._id,
       remaining_price: item.remaining_price,
       remaining_price_paid_on: item.remaining_price_paid_on,
     }));
