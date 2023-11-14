@@ -37,18 +37,18 @@ export const fetchProfit = asyncHandler(async (req, res) => {
       id: item._id,
       remaining_price: item.remaining_price,
       remaining_price_paid_on: item.remaining_price_paid_on,
-      vendor_details:item.vendor_details
+      vendor_details: item.vendor_details,
     }));
 
     const filteredSales = sales.filter((item) => {
-      if(item.remainig_amount > 0 && item.next_due_on != null){
-        return item
+      if (item.remainig_amount > 0 && item.next_due_on != null) {
+        return item;
       }
-    })
+    });
 
     return res.status(200).json({
       profit,
-      sales:filteredSales,
+      sales: filteredSales,
       mrm_remaining_to_pay_amount: rowProductMRMRemainingToPayAmt,
     });
   } catch (error) {
