@@ -7,7 +7,6 @@ import Employee from "../models/employeeModel.js";
 export const fetchProfit = asyncHandler(async (req, res) => {
   try {
     const { to, from } = req.query;
-
     const dateFilter = {};
     if (to && from) {
       dateFilter.date = { $gte: new Date(from), $lte: new Date(to) };
@@ -35,6 +34,7 @@ export const fetchProfit = asyncHandler(async (req, res) => {
     const profit = saleAmount - currentExpenses - employeeSalaries - rowProductPurchase;
 
     const rowProductMRMRemainingToPayAmt = rowProduct.map((item) => ({
+      id:item._id,
       remaining_price: item.remaining_price,
       remaining_price_paid_on: item.remaining_price_paid_on,
     }));

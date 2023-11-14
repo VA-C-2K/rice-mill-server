@@ -60,9 +60,9 @@ export const createSales = asyncHandler(async (req, res) => {
       customer_details,
       created_by: user,
       modified_by: user,
-    }
-    if(!isEmpty(vehicle_details)) payload.vehicle_details = vehicle_details;
-    if(!isEmpty(vehicle_number)) payload.vehicle_number = vehicle_number;
+    };
+    if (!isEmpty(vehicle_details)) payload.vehicle_details = vehicle_details;
+    if (!isEmpty(vehicle_number)) payload.vehicle_number = vehicle_number;
     const newSale = new Sales(payload);
     const savedSale = await newSale.save();
     if (savedSale) {
@@ -86,14 +86,14 @@ export const updateSales = asyncHandler(async (req, res) => {
     }
     const remainigAmount = updateDetails.discount ? updateDetails.total_amount - updateDetails.discount - updateDetails.final_amount_paid : 0;
     const payload = {
-      ...updateDetails, remainig_amount: remainigAmount, created_by: user, modified_by: user
-    }
-    if(!isEmpty(updateDetails?.vehicle_details)) payload.vehicle_details = updateDetails?.vehicle_details;
-    if(!isEmpty(updateDetails?.vehicle_number)) payload.vehicle_number = updateDetails?.vehicle_number;
-    const updatedSale = await Sales.updateOne(
-      { _id: sale_id },
-      { $set: payload }
-    );
+      ...updateDetails,
+      remainig_amount: remainigAmount,
+      created_by: user,
+      modified_by: user,
+    };
+    if (!isEmpty(updateDetails?.vehicle_details)) payload.vehicle_details = updateDetails?.vehicle_details;
+    if (!isEmpty(updateDetails?.vehicle_number)) payload.vehicle_number = updateDetails?.vehicle_number;
+    const updatedSale = await Sales.updateOne({ _id: sale_id }, { $set: payload });
     if (updatedSale.modifiedCount) {
       return Product.updateOne({ _id: updateDetails.product_details }, { $inc: { quantity: -updateDetails.quantity } }).then(() => {
         return res.status(200).json({ message: "Sales updated successfully" });
