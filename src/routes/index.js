@@ -16,7 +16,7 @@ export const routes = (app) => {
   app.use("/customer", customerRoutes);
   app.use("/vendor", vendorRoutes);
   app.use("/product", productRoutes);
-  app.use("/employee", employeeRoutes);
+  app.use("/employees", employeeRoutes);
   app.use("/vehicle", vehicleRoutes);
   app.use("/row-material", rowMaterialRoutes);
   app.use("/daily-expenses", dailyExpenseRoutes);
