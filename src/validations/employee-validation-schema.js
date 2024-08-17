@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi from "joi";
 
 export const createEmployeeSchema = Joi.object({
   phone_number: Joi.string().required(),
@@ -9,7 +9,7 @@ export const createEmployeeSchema = Joi.object({
   aadhar_card_no: Joi.string(),
   no_of_leaves: Joi.number(),
   role: Joi.string().required(),
-  over_time_hrs: Joi.number()
+  over_time_hrs: Joi.number(),
 });
 
 export const updateEmployeeSchema = Joi.object({
@@ -21,5 +21,5 @@ export const updateEmployeeSchema = Joi.object({
   aadhar_card_no: Joi.string(),
   no_of_leaves: Joi.number(),
   role: Joi.string(),
-  over_time_hrs: Joi.number()
+  over_time_hrs: Joi.number(),
 }).min(1);

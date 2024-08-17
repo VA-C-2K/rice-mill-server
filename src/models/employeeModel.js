@@ -31,7 +31,7 @@ export const findEmployees = (options = {}) => {
     sort: options.sort || { _id: 1 },
     populate: [
       { path: "created_by", select: "name phonenumber" },
-      { path: "modified_by", select: "name phonenumber" }
+      { path: "modified_by", select: "name phonenumber" },
     ],
     select: options.select,
   });

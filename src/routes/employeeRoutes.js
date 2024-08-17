@@ -6,12 +6,8 @@ import { validatePayload } from "../validations/index.js";
 
 const router = express.Router();
 
-router.route("/:id?")
-  .get(protect, fetchEmployee)
-  .post(protect, validatePayload(createEmployeeSchema),createEmployee);
+router.route("/:id?").get(protect, fetchEmployee).post(protect, validatePayload(createEmployeeSchema), createEmployee);
 
-router.route("/:id")
-  .put(protect, validatePayload(updateEmployeeSchema), updateEmployee)
-  .delete(protect, deleteEmployee);
+router.route("/:id").put(protect, validatePayload(updateEmployeeSchema), updateEmployee).delete(protect, deleteEmployee);
 
 export default router;

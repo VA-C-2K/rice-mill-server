@@ -3,7 +3,10 @@ import isEmpty from "lodash/isEmpty.js";
 import Employee, { findEmployees } from "../models/employeeModel.js";
 
 export const fetchEmployee = asyncHandler(async (req, res) => {
-  const { params: { id: emp_id }, query: { term, role, page = 1, perPage = 5 } } = req;
+  const {
+    params: { id: emp_id },
+    query: { term, role, page = 1, perPage = 5 },
+  } = req;
 
   if (emp_id) {
     const employee = await Employee.findById(emp_id);
@@ -30,9 +33,12 @@ export const fetchEmployee = asyncHandler(async (req, res) => {
 });
 
 export const createEmployee = asyncHandler(async (req, res) => {
-  const { user: { _id: userId }, body: payload } = req;
+  const {
+    user: { _id: userId },
+    body: payload,
+  } = req;
 
-  const isExist = await Employee.findOne({ phone_number: payload.phone_number });;
+  const isExist = await Employee.findOne({ phone_number: payload.phone_number });
   if (isExist) {
     return res.status(400).json({ message: "Employee already exists" });
   }
@@ -51,13 +57,13 @@ export const createEmployee = asyncHandler(async (req, res) => {
 });
 
 export const updateEmployee = asyncHandler(async (req, res) => {
-  const { params: { id: emp_id }, body: payload, user: { _id: userId } } = req;
+  const {
+    params: { id: emp_id },
+    body: payload,
+    user: { _id: userId },
+  } = req;
 
-  const updatedEmployee = await Employee.findByIdAndUpdate(
-    emp_id,
-    { ...payload, modified_by: userId },
-    { new: true }
-  );
+  const updatedEmployee = await Employee.findByIdAndUpdate(emp_id, { ...payload, modified_by: userId }, { new: true });
 
   if (updatedEmployee) {
     return res.status(200).json({ message: "Employee updated successfully" });
@@ -67,7 +73,9 @@ export const updateEmployee = asyncHandler(async (req, res) => {
 });
 
 export const deleteEmployee = asyncHandler(async (req, res) => {
-  const { params: { id: emp_id } } = req;
+  const {
+    params: { id: emp_id },
+  } = req;
 
   const deletedEmployee = await Employee.findByIdAndDelete(emp_id);
   if (deletedEmployee) {
