@@ -1,6 +1,7 @@
 import Joi from "joi";
+import { validatePayload } from "./index.js";
 
-export const createEmployeeSchema = Joi.object({
+export const createEmployeeSchemaValidation = validatePayload(Joi.object({
   phone_number: Joi.string().required(),
   first_name: Joi.string().required(),
   last_name: Joi.string().required(),
@@ -10,9 +11,9 @@ export const createEmployeeSchema = Joi.object({
   no_of_leaves: Joi.number(),
   role: Joi.string().required(),
   over_time_hrs: Joi.number(),
-});
+}));
 
-export const updateEmployeeSchema = Joi.object({
+export const updateEmployeeSchemaValidation = validatePayload(Joi.object({
   phone_number: Joi.string(),
   first_name: Joi.string(),
   last_name: Joi.string(),
@@ -22,4 +23,4 @@ export const updateEmployeeSchema = Joi.object({
   no_of_leaves: Joi.number(),
   role: Joi.string(),
   over_time_hrs: Joi.number(),
-}).min(1);
+}).min(1));
