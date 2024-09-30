@@ -1,12 +1,13 @@
 import express from "express";
 import { fetchVehicle, createVehicle, updateVehicle, deleteVehicle } from "../controllers/vehicleController.js";
 import { protect } from "../middleware/authMiddleware.js";
+import { createVehicleSchemaValidation, updateVehicleSchemaValidation } from "../validations/vehicle-validation.js";
 
 const router = express.Router();
 
-router.route("/").get(protect, fetchVehicle);
-router.route("/create").post(protect, createVehicle);
-router.route("/update").put(protect, updateVehicle);
-router.route("/delete").delete(protect, deleteVehicle);
+router.route("/:id?").get(protect, fetchVehicle);
+router.route("/").post(protect, createVehicleSchemaValidation, createVehicle);
+router.route("/:id").put(protect, updateVehicleSchemaValidation, updateVehicle);
+router.route("/:id").delete(protect, deleteVehicle);
 
 export default router;

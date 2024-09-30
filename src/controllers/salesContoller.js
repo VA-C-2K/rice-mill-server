@@ -2,126 +2,105 @@ import asyncHandler from "express-async-handler";
 import Sales from "../models/salesModel.js";
 import Product from "../models/productModel.js";
 import isEmpty from "lodash/isEmpty.js";
+import { createData, findData } from "../models/helpers/index.js";
 
 export const fetchSales = asyncHandler(async (req, res) => {
-  const { sale_id, page, perPage = 5, next_due_on = -1, date = -1 } = req.query;
-  try {
-    if (sale_id) {
-      const sale = await Sales.findById(sale_id);
-      if (sale) {
-        return res.status(200).json(sale);
-      } else {
-        return res.status(404).json({ message: "Sales not found" });
-      }
+  const {
+    params: { id },
+    query: { term, page = 1, perPage = 5, sort },
+  } = req;
+  const sortObject = convertSortStringToObject(sort);
+
+  if (id) {
+    const sale = await Sales.findById(id);
+    if (sale) {
+      return res.status(200).json(sale);
+    } else {
+      return res.status(404).json({ message: "Sales not found" });
     }
-
-    const sales = await Sales.find({})
-      .sort({ next_due_on, date })
-      .skip((page - 1) * perPage)
-      .limit(perPage)
-      .populate("vehicle_details", "vehicle_number")
-      .populate("product_details", "name quantity current_rate")
-      .populate("customer_details", "phone_number first_name last_name gov_or_cust")
-      .populate("created_by", "name phonenumber")
-      .populate("modified_by", "name phonenumber");
-
-    const totalSales = await Sales.countDocuments({});
-    return res.status(200).json({
-      sales,
-      totalCount: totalSales,
-      currentPage: page,
-      totalPages: Math.ceil(totalSales / perPage),
-    });
-  } catch (error) {
-    res.status(400);
-    throw new Error(error.message);
   }
+
+  const filter = {};
+  if (!isEmpty(term)) {
+    filter.$or = [
+      { "customer_details.phone_number": { $regex: term, $options: "i" } },
+      { "customer_details.first_name": { $regex: term, $options: "i" } },
+      { "customer_details.last_name": { $regex: term, $options: "i" } },
+      { "customer_details.gov_or_cust": { $regex: term, $options: "i" } },
+      { "product_details.name": { $regex: term, $options: "i" } },
+      { "vehicle_details.vehicle_number": { $regex: term, $options: "i" } },
+      { vehicle_number: { $regex: term, $options: "i" } },
+    ];
+  }
+
+  const result = await findData({
+    model: Sales, filter, page: +page, perPage, sort: sortObject,
+    populate: [
+      { path: "vehicle_details", select: "vehicle_number" },
+      { path: "product_details", select: "name quantity current_rate" },
+      { path: "customer_details", select: "phone_number first_name last_name gov_or_cust" },
+    ],
+  });
+  return res.status(200).json(result);
 });
 
 export const createSales = asyncHandler(async (req, res) => {
-  const { date, total_amount, discount, final_amount_paid, next_due_on, quantity, vehicle_number, vehicle_details, product_details, customer_details } =
-    req.body;
-  const user = req.user._id;
+  const {
+    user: { _id: userId },
+    body: payload,
+  } = req;
 
-  if (!date || !total_amount || !quantity || !final_amount_paid || !final_amount_paid || !product_details || !customer_details) {
-    return res.status(400).json({ message: "Please enter all fields" });
-  }
   const remainigAmount = discount ? total_amount - discount - final_amount_paid : 0;
-  try {
-    const payload = {
-      date,
-      total_amount,
-      discount,
-      final_amount_paid,
-      remainig_amount: remainigAmount,
-      next_due_on,
-      quantity,
-      product_details,
-      customer_details,
-      created_by: user,
-      modified_by: user,
-    };
-    if (!isEmpty(vehicle_details)) payload.vehicle_details = vehicle_details;
-    if (!isEmpty(vehicle_number)) payload.vehicle_number = vehicle_number;
-    const newSale = new Sales(payload);
-    const savedSale = await newSale.save();
-    if (savedSale) {
-      return Product.updateOne({ _id: product_details }, { $inc: { quantity: -quantity } }).then(() => {
-        return res.status(201).json({ message: "Sales created successfully" });
-      });
-    }
-  } catch (error) {
-    return res.status(400).json({ message: error.message });
-  }
+  if (!isEmpty(vehicle_details)) payload.vehicle_details = vehicle_details;
+  if (!isEmpty(vehicle_number)) payload.vehicle_number = vehicle_number;
+
+  return createData({ model: Sales, data: { ...payload, remainig_amount: remainigAmount, created_by: userId } })
+    .then((res) => {
+      return Product.updateOne({ _id: res.product_details }, { $inc: { quantity: -quantity } })
+        .then(() => {
+          return res.status(201).json({ message: "Sales created successfully" });
+        })
+        .catch(() => res.status(400).json({ message: "Something went wrong" }));
+    })
+    .catch(() => res.status(400).json({ message: "Something went wrong" }));
 });
 
 export const updateSales = asyncHandler(async (req, res) => {
-  const { sale_id, ...updateDetails } = req.body;
-  const user = req.user._id;
+  const {
+    params: { id },
+    body: payload,
+    user: { _id: userId },
+  } = req;
 
-  try {
-    const salesExists = await Sales.findById(sale_id);
-    if (!salesExists) {
-      return res.status(404).json({ message: "Sales not found" });
-    }
-    const remainigAmount = updateDetails.discount ? updateDetails.total_amount - updateDetails.discount - updateDetails.final_amount_paid : 0;
-    const payload = {
-      ...updateDetails,
-      remainig_amount: remainigAmount,
-      created_by: user,
-      modified_by: user,
-    };
-    if (!isEmpty(updateDetails?.vehicle_details)) payload.vehicle_details = updateDetails?.vehicle_details;
-    if (!isEmpty(updateDetails?.vehicle_number)) payload.vehicle_number = updateDetails?.vehicle_number;
-    const updatedSale = await Sales.updateOne({ _id: sale_id }, { $set: payload });
-    if (updatedSale.modifiedCount) {
-      return Product.updateOne({ _id: updateDetails.product_details }, { $inc: { quantity: -updateDetails.quantity } }).then(() => {
-        return res.status(200).json({ message: "Sales updated successfully" });
-      });
-    } else {
-      return res.status(200).json({ message: "No changes were made" });
-    }
-  } catch (error) {
-    return res.status(400).json({ message: error.message });
+  const isExist = await Sales.findById(id);
+  if (!isExist) {
+    return res.status(400).json({ message: "Sale not found" });
   }
+
+  const remainigAmount = payload.discount ? payload.total_amount - payload.discount - payload.final_amount_paid : 0;
+
+  return updateData({ id, model: Sales, data: { ...payload, remainig_amount: remainigAmount, modified_by: userId } })
+    .then((updatedSale) => {
+      return Product.updateOne({ _id: updatedSale.product_details }, { $inc: { quantity: -updatedSale.quantity } }).then(() => {
+        return res.status(200).json({ message: "Sales updated successfully" });
+      }).catch(() => res.status(400).json({ message: "Something went wrong" }));
+    }).catch(() => res.status(400).json({ message: "Something went wrong" }));
 });
 
 export const deleteSales = asyncHandler(async (req, res) => {
-  const { sale_id } = req.query;
-  try {
-    const saleExists = await Sales.findById(sale_id);
-    if (!saleExists) {
-      return res.status(404).json({ message: "Sales not found" });
-    }
-    const deletedSale = await Sales.deleteOne({ _id: sale_id });
-    if (deletedSale.deletedCount > 0) {
-      return Product.updateOne({ _id: saleExists.product_details }, { $inc: { quantity: +saleExists.quantity } }).then(() => {
-        return res.status(200).json({ message: "Sales deleted successfully" });
-      });
-    } else {
-      return res.status(200).json({ message: "No Sales was deleted" });
-    }
-  } catch (error) {
-    return res.status(400).json({ message: error.message });
+  const {
+    params: { id },
+  } = req;
+  const isExist = await Sales.findById(id);
+  if (!isExist) {
+    return res.status(400).json({ message: "Sale not found" });
   }
+  return Sales.findByIdAndDelete(id)
+    .then(() => {
+      return Product.updateOne({ _id: saleExists.product_details }, { $inc: { quantity: +saleExists.quantity } })
+        .then(() => {
+          return res.status(200).json({ message: "Sale deleted successfully" });
+        }).catch(() => res.status(400).json({ message: "Something went wrong" }));
+    })
+    .catch(() => res.status(400).json({ message: "Something went wrong" }));
 });

@@ -5,7 +5,7 @@ const salesSchema = mongoose.Schema(
     date: { type: Date, required: true, default: Date.now },
     total_amount: { type: Number, required: true },
     quantity: { type: Number, required: true },
-    discount: { type: Number, required: true },
+    discount: { type: Number },
     final_amount_paid: { type: Number, required: true },
     remainig_amount: { type: Number },
     next_due_on: { type: Date },

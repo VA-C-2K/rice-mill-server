@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { validatePayload } from "./index.js";
 
-export const createProductSchemaValidation = validatePayload(
+export const createRowMaterialSchemaValidation = validatePayload(
   Joi.object({
     date: Joi.date().required(),
     type_of_material: Joi.string().required(),
