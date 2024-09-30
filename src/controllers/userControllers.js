@@ -12,13 +12,14 @@ export const registerUser = asyncHandler(async (req, res) => {
   }
 
   return createData({ model: User, data: { ...payload } })
-    .then((user) => res.status(201).json(
-      {
+    .then((user) =>
+      res.status(201).json({
         _id: user._id,
         name: user.name,
         phonenumber: user.phonenumber,
-        token: generateToken(user._id)
-      }))
+        token: generateToken(user._id),
+      })
+    )
     .catch(() => res.status(400).json({ message: "Something went wrong" }));
 });
 

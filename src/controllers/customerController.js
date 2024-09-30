@@ -4,7 +4,10 @@ import Customer from "../models/customerModel.js";
 import { createData, findData, updateData } from "../models/helpers/index.js";
 
 export const fetchCustomer = asyncHandler(async (req, res) => {
-  const { params: { id }, query: { term, page = 1, perPage = 5 } } = req;
+  const {
+    params: { id },
+    query: { term, page = 1, perPage = 5 },
+  } = req;
 
   if (id) {
     const customer = await Customer.findById(id);
@@ -29,7 +32,10 @@ export const fetchCustomer = asyncHandler(async (req, res) => {
 });
 
 export const createCustomer = asyncHandler(async (req, res) => {
-  const { user: { _id: userId }, body: payload } = req;
+  const {
+    user: { _id: userId },
+    body: payload,
+  } = req;
 
   const isExist = await Customer.findOne({ phone_number: payload.phone_number });
   if (isExist) {
@@ -42,7 +48,11 @@ export const createCustomer = asyncHandler(async (req, res) => {
 });
 
 export const updateCustomer = asyncHandler(async (req, res) => {
-  const { params: { id }, body: payload, user: { _id: userId } } = req;
+  const {
+    params: { id },
+    body: payload,
+    user: { _id: userId },
+  } = req;
 
   const isExist = await Customer.findById(id);
   if (!isExist) {
@@ -54,7 +64,9 @@ export const updateCustomer = asyncHandler(async (req, res) => {
 });
 
 export const deleteCustomer = asyncHandler(async (req, res) => {
-  const { params: { id } } = req;
+  const {
+    params: { id },
+  } = req;
 
   const isExist = await Customer.findById(id);
   if (!isExist) {

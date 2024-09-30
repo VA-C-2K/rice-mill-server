@@ -4,7 +4,10 @@ import DailyExpense from "../models/dailyExpenseModel.js";
 import { createData, findData, updateData } from "../models/helpers/index.js";
 
 export const fetchDailyExpense = asyncHandler(async (req, res) => {
-  const { params: { id }, query: { term, page = 1, perPage = 5 } } = req;
+  const {
+    params: { id },
+    query: { term, page = 1, perPage = 5 },
+  } = req;
 
   if (id) {
     const dailyExpense = await DailyExpense.findById(id);
@@ -17,10 +20,7 @@ export const fetchDailyExpense = asyncHandler(async (req, res) => {
 
   const filter = {};
   if (!isEmpty(term)) {
-    filter.$or = [
-      { entity: { $regex: term, $options: "i" } },
-      { description: { $regex: term, $options: "i" } }
-    ];
+    filter.$or = [{ entity: { $regex: term, $options: "i" } }, { description: { $regex: term, $options: "i" } }];
   }
 
   const result = await findData({ model: DailyExpense, filter, page: +page, perPage });
@@ -28,7 +28,10 @@ export const fetchDailyExpense = asyncHandler(async (req, res) => {
 });
 
 export const createDailyExpense = asyncHandler(async (req, res) => {
-  const { user: { _id: userId }, body: payload } = req;
+  const {
+    user: { _id: userId },
+    body: payload,
+  } = req;
 
   return createData({ model: DailyExpense, data: { ...payload, created_by: userId } })
     .then(() => res.status(201).json({ message: "Daily Expense created successfully" }))
@@ -36,7 +39,11 @@ export const createDailyExpense = asyncHandler(async (req, res) => {
 });
 
 export const updateDailyExpense = asyncHandler(async (req, res) => {
-  const { params: { id }, body: payload, user: { _id: userId } } = req;
+  const {
+    params: { id },
+    body: payload,
+    user: { _id: userId },
+  } = req;
 
   const isExist = await DailyExpense.findById(id);
   if (!isExist) {
@@ -48,7 +55,9 @@ export const updateDailyExpense = asyncHandler(async (req, res) => {
 });
 
 export const deleteDailyExpense = asyncHandler(async (req, res) => {
-  const { params: { id } } = req;
+  const {
+    params: { id },
+  } = req;
   const isExist = await DailyExpense.findById(id);
   if (!isExist) {
     return res.status(400).json({ message: "Daily Expense not found" });

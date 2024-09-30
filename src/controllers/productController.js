@@ -3,7 +3,10 @@ import Product from "../models/productModel.js";
 import { createData, findData, updateData } from "../models/helpers/index.js";
 
 export const fetchProduct = asyncHandler(async (req, res) => {
-  const { params: { id }, query: { page = 1, perPage = 5 } } = req;
+  const {
+    params: { id },
+    query: { page = 1, perPage = 5 },
+  } = req;
 
   if (id) {
     const product = await Product.findById(id);
@@ -19,7 +22,10 @@ export const fetchProduct = asyncHandler(async (req, res) => {
 });
 
 export const createProduct = asyncHandler(async (req, res) => {
-  const { user: { _id: userId }, body: payload } = req;
+  const {
+    user: { _id: userId },
+    body: payload,
+  } = req;
 
   const isExist = await Product.findOne({ name: payload.name });
   if (isExist) {
@@ -32,7 +38,11 @@ export const createProduct = asyncHandler(async (req, res) => {
 });
 
 export const updateProduct = asyncHandler(async (req, res) => {
-  const { params: { id }, body: payload, user: { _id: userId } } = req;
+  const {
+    params: { id },
+    body: payload,
+    user: { _id: userId },
+  } = req;
 
   const isExist = await Product.findById(id);
   if (!isExist) {
@@ -45,8 +55,9 @@ export const updateProduct = asyncHandler(async (req, res) => {
 });
 
 export const deleteProduct = asyncHandler(async (req, res) => {
-
-  const { params: { id } } = req;
+  const {
+    params: { id },
+  } = req;
   const isExist = await Product.findById(id);
   if (!isExist) {
     return res.status(400).json({ message: "Product not found" });

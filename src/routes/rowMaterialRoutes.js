@@ -6,8 +6,8 @@ import { createProductSchemaValidation, updateRowMaterialSchemaValidation } from
 const router = express.Router();
 
 router.route("/:id?").get(protect, fetchRowMaterial);
-router.route("/").post(protect, createProductSchemaValidation,createRowMaterials);
-router.route("/:id").put(protect, updateRowMaterialSchemaValidation,updateRowMaterial);
+router.route("/").post(protect, createProductSchemaValidation, createRowMaterials);
+router.route("/:id").put(protect, updateRowMaterialSchemaValidation, updateRowMaterial);
 router.route("/:id").delete(protect, deleteRowMaterial);
 
 export default router;

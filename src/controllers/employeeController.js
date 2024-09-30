@@ -4,7 +4,10 @@ import Employee from "../models/employeeModel.js";
 import { createData, findData, updateData } from "../models/helpers/index.js";
 
 export const fetchEmployee = asyncHandler(async (req, res) => {
-  const { params: { id }, query: { term, page = 1, perPage = 5 } } = req;
+  const {
+    params: { id },
+    query: { term, page = 1, perPage = 5 },
+  } = req;
 
   if (id) {
     const employee = await Employee.findById(id);
@@ -31,7 +34,10 @@ export const fetchEmployee = asyncHandler(async (req, res) => {
 });
 
 export const createEmployee = asyncHandler(async (req, res) => {
-  const { user: { _id: userId }, body: payload } = req;
+  const {
+    user: { _id: userId },
+    body: payload,
+  } = req;
 
   const isExist = await Employee.findOne({ phone_number: payload.phone_number });
   if (isExist) {
@@ -44,7 +50,11 @@ export const createEmployee = asyncHandler(async (req, res) => {
 });
 
 export const updateEmployee = asyncHandler(async (req, res, next) => {
-  const { params: { id }, body: payload, user: { _id: userId } } = req;
+  const {
+    params: { id },
+    body: payload,
+    user: { _id: userId },
+  } = req;
   const isExist = await Employee.findById(id);
   if (!isExist) {
     return res.status(400).json({ message: "Employee not found" });
@@ -55,7 +65,9 @@ export const updateEmployee = asyncHandler(async (req, res, next) => {
 });
 
 export const deleteEmployee = asyncHandler(async (req, res, next) => {
-  const { params: { id } } = req;
+  const {
+    params: { id },
+  } = req;
   const isExist = await Employee.findById(id);
   if (!isExist) {
     return res.status(400).json({ message: "Employee not found" });
