@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { fetchPaginatedData } from "./helpers/index.js";
 
 const employeeSchema = mongoose.Schema(
   {
@@ -22,18 +21,4 @@ const employeeSchema = mongoose.Schema(
 
 const Employee = mongoose.model("Employee", employeeSchema);
 
-export const findEmployees = (options = {}) => {
-  return fetchPaginatedData({
-    model: Employee,
-    filter: options.filter || {},
-    page: options.page,
-    perPage: options.perPage,
-    sort: options.sort || { _id: 1 },
-    populate: [
-      { path: "created_by", select: "name phonenumber" },
-      { path: "modified_by", select: "name phonenumber" },
-    ],
-    select: options.select,
-  });
-};
 export default Employee;

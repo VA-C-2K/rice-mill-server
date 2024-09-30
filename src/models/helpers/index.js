@@ -1,4 +1,4 @@
-export const fetchPaginatedData = async ({ model, filter = {}, page = 1, perPage = 10, sort = { _id: 1 }, populate = [], select = "" }) => {
+const fetchPaginatedData = async ({ model, filter = {}, page = 1, perPage = 10, sort = { _id: 1 }, populate = [], select = "" }) => {
   const totalCount = await model.countDocuments(filter);
   const data = await model
     .find(filter)
@@ -16,4 +16,25 @@ export const fetchPaginatedData = async ({ model, filter = {}, page = 1, perPage
       total_pages: Math.ceil(totalCount / perPage),
     },
   };
+};
+
+export const findData = ({ model, filter = {}, populate = [], page, perPage, sort = { _id: 1 }, select }) => {
+  return fetchPaginatedData({
+    model,
+    filter,
+    page,
+    perPage,
+    sort,
+    populate: [...populate, { path: "created_by", select: "name phonenumber" }, { path: "modified_by", select: "name phonenumber" }],
+    select,
+  });
+};
+
+export const createData = async ({ model, data }) => {
+  const newModalObj = new model(data);
+  return newModalObj.save();
+};
+
+export const updateData = async ({ id, model, data }) => {
+  return model.findByIdAndUpdate(id, data, { new: true });
 };

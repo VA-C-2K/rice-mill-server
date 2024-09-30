@@ -1,46 +1,33 @@
 import asyncHandler from "express-async-handler";
 import generateToken from "../config/generateToken.js";
 import User from "../models/userModel.js";
+import { createData } from "../models/helpers/index.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
-  const { name, phonenumber, password } = req.body;
-  if (!name || !password || !phonenumber) {
-    res.status(400);
-    throw new Error("Please Enter all the Feilds");
+  const { body: payload } = req;
+
+  const isExist = await User.User({ phonenumber: payload.phonenumber });
+  if (isExist) {
+    return res.status(400).json({ message: "User already exists" });
   }
-  let userExists;
-  if (!isNaN(phonenumber)) {
-    userExists = await User.findOne({ phonenumber });
-  }
-  if (userExists) {
-    res.status(400);
-    throw new Error("User already exists");
-  }
-  const user = await User.create({
-    name,
-    password,
-    phonenumber,
-  });
-  if (user) {
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      phonenumber: user.phonenumber,
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(400);
-    throw new Error("Failed to Create the User");
-  }
+
+  return createData({ model: User, data: { ...payload } })
+    .then((user) => res.status(201).json(
+      {
+        _id: user._id,
+        name: user.name,
+        phonenumber: user.phonenumber,
+        token: generateToken(user._id)
+      }))
+    .catch(() => res.status(400).json({ message: "Something went wrong" }));
 });
 
 export const authUser = asyncHandler(async (req, res) => {
   const { phonenumber, password } = req.body;
-  let user;
-  if (!isNaN(phonenumber)) {
-    user = await User.findOne({ phonenumber });
-  }
-  if (user) {
+  const user = await User.User({ phonenumber });
+  if (_.isEmpty(user)) {
+    return res.status(400).json({ message: "User Not Found" });
+  } else {
     const checkMatchPassword = await user.matchPassword(password);
     if (checkMatchPassword) {
       res.json({
@@ -50,11 +37,7 @@ export const authUser = asyncHandler(async (req, res) => {
         token: generateToken(user._id),
       });
     } else {
-      res.status(401);
-      throw new Error("Invalid Email or Password");
+      res.status(401).json({ message: "Invalid Email or Password" });
     }
-  } else {
-    res.status(401);
-    throw new Error("User Not Found");
   }
 });

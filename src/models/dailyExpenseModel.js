@@ -14,6 +14,6 @@ const dailyExpenseSchema = mongoose.Schema(
   }
 );
 
-const dailyExpense = mongoose.model("Daily_expense", dailyExpenseSchema);
+const DailyExpense = mongoose.model("Daily_expense", dailyExpenseSchema);
 
-export default dailyExpense;
+export default DailyExpense;
