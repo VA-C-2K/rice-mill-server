@@ -42,9 +42,9 @@ export const updateData = async ({ id, model, data }) => {
 export const convertSortStringToObject = (sortString) => {
   if (!sortString) return {};
 
-  return sortString.split(',').reduce((acc, curr) => {
-    const [key, order] = curr.trim().split(':');
-    acc[key.trim()] = order.trim().toLowerCase() === 'asc' ? 1 : -1;
+  return sortString.split(",").reduce((acc, curr) => {
+    const [key, order] = curr.trim().split(":");
+    acc[key.trim()] = order.trim().toLowerCase() === "asc" ? 1 : -1;
     return acc;
   }, {});
 };

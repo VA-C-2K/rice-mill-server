@@ -25,10 +25,12 @@ export const fetchVehicle = asyncHandler(async (req, res) => {
   }
 
   const result = await findData({
-    model: Vehicle, filter, page: +page, perPage, sort: sortObject,
-    populate: [
-      { path: "employee_details", select: "first_name last_name phone_number role" },
-    ],
+    model: Vehicle,
+    filter,
+    page: +page,
+    perPage,
+    sort: sortObject,
+    populate: [{ path: "employee_details", select: "first_name last_name phone_number role" }],
   });
   return res.status(200).json(result);
 });
@@ -85,5 +87,4 @@ export const deleteVehicle = asyncHandler(async (req, res) => {
   return Vehicle.findByIdAndDelete(id)
     .then(() => res.status(201).json({ message: "Vehicle deleted successfully" }))
     .catch(() => res.status(400).json({ message: "Something went wrong" }));
-
 });

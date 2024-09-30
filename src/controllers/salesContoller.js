@@ -34,7 +34,11 @@ export const fetchSales = asyncHandler(async (req, res) => {
   }
 
   const result = await findData({
-    model: Sales, filter, page: +page, perPage, sort: sortObject,
+    model: Sales,
+    filter,
+    page: +page,
+    perPage,
+    sort: sortObject,
     populate: [
       { path: "vehicle_details", select: "vehicle_number" },
       { path: "product_details", select: "name quantity current_rate" },
@@ -81,10 +85,13 @@ export const updateSales = asyncHandler(async (req, res) => {
 
   return updateData({ id, model: Sales, data: { ...payload, remainig_amount: remainigAmount, modified_by: userId } })
     .then((updatedSale) => {
-      return Product.updateOne({ _id: updatedSale.product_details }, { $inc: { quantity: -updatedSale.quantity } }).then(() => {
-        return res.status(200).json({ message: "Sales updated successfully" });
-      }).catch(() => res.status(400).json({ message: "Something went wrong" }));
-    }).catch(() => res.status(400).json({ message: "Something went wrong" }));
+      return Product.updateOne({ _id: updatedSale.product_details }, { $inc: { quantity: -updatedSale.quantity } })
+        .then(() => {
+          return res.status(200).json({ message: "Sales updated successfully" });
+        })
+        .catch(() => res.status(400).json({ message: "Something went wrong" }));
+    })
+    .catch(() => res.status(400).json({ message: "Something went wrong" }));
 });
 
 export const deleteSales = asyncHandler(async (req, res) => {
@@ -100,7 +107,8 @@ export const deleteSales = asyncHandler(async (req, res) => {
       return Product.updateOne({ _id: saleExists.product_details }, { $inc: { quantity: +saleExists.quantity } })
         .then(() => {
           return res.status(200).json({ message: "Sale deleted successfully" });
-        }).catch(() => res.status(400).json({ message: "Something went wrong" }));
+        })
+        .catch(() => res.status(400).json({ message: "Something went wrong" }));
     })
     .catch(() => res.status(400).json({ message: "Something went wrong" }));
 });
