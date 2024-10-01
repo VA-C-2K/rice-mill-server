@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import isEmpty from "lodash/isEmpty.js";
 import Vehicle from "../models/vehicleModel.js";
+import { createData, findData, updateData } from "../models/helpers/index.js";
 
 export const fetchVehicle = asyncHandler(async (req, res) => {
   const {
@@ -12,7 +13,7 @@ export const fetchVehicle = asyncHandler(async (req, res) => {
     if (vehicle) {
       return res.status(200).json(vehicle);
     } else {
-      return res.status(404).json({ message: "Sales not found" });
+      return res.status(404).json({ message: "Vehicle not found" });
     }
   }
   const filter = {};
@@ -52,18 +53,11 @@ export const createVehicle = asyncHandler(async (req, res) => {
 });
 
 export const updateVehicle = asyncHandler(async (req, res) => {
-  const { vehicle_id, employee_id, ...updateDetails } = req.body;
-  const user = req.user._id;
   const {
     params: { id },
     body: payload,
     user: { _id: userId },
   } = req;
-
-  const vehicleExists = await Vehicle.findById(vehicle_id);
-  if (!vehicleExists) {
-    return res.status(404).json({ message: "Vehicle not found" });
-  }
 
   const isExist = await Vehicle.findById(id);
   if (!isExist) {

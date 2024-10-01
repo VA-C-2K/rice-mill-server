@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 import Sales from "../models/salesModel.js";
 import Product from "../models/productModel.js";
 import isEmpty from "lodash/isEmpty.js";
-import { createData, findData } from "../models/helpers/index.js";
+import { createData, findData, updateData } from "../models/helpers/index.js";
 
 export const fetchSales = asyncHandler(async (req, res) => {
   const {
