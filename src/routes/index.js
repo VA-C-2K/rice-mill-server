@@ -12,13 +12,13 @@ import profitsRoutes from "./profitsRoutes.js";
 
 // Function to set up routes
 export const routes = (app) => {
-  app.use("/user", userRoutes);
-  app.use("/customer", customerRoutes);
-  app.use("/vendor", vendorRoutes);
-  app.use("/product", productRoutes);
+  app.use("/users", userRoutes);
+  app.use("/customers", customerRoutes);
+  app.use("/vendors", vendorRoutes);
+  app.use("/products", productRoutes);
   app.use("/employees", employeeRoutes);
-  app.use("/vehicle", vehicleRoutes);
-  app.use("/row-material", rowMaterialRoutes);
+  app.use("/vehicles", vehicleRoutes);
+  app.use("/row-materials", rowMaterialRoutes);
   app.use("/daily-expenses", dailyExpenseRoutes);
   app.use("/sales", salesRoutes);
   app.use("/profits", profitsRoutes);

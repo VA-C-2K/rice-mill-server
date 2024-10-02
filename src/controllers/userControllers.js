@@ -2,11 +2,12 @@ import asyncHandler from "express-async-handler";
 import generateToken from "../config/generateToken.js";
 import User from "../models/userModel.js";
 import { createData } from "../models/helpers/index.js";
+import _ from "lodash";
 
 export const registerUser = asyncHandler(async (req, res) => {
   const { body: payload } = req;
 
-  const isExist = await User.User({ phonenumber: payload.phonenumber });
+  const isExist = await User.findOne({ phonenumber: payload.phonenumber });
   if (isExist) {
     return res.status(400).json({ message: "User already exists" });
   }
@@ -25,7 +26,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 
 export const authUser = asyncHandler(async (req, res) => {
   const { phonenumber, password } = req.body;
-  const user = await User.User({ phonenumber });
+  const user = await User.findOne({ phonenumber });
   if (_.isEmpty(user)) {
     return res.status(400).json({ message: "User Not Found" });
   } else {
